@@ -17,10 +17,10 @@ restricciones = int(input("Cuantas restricciones hay?\n"))
 #   S1   0  |   1   |   2   |   1   |   1   |   0   |   0   |   430
 #   S2   0  |   3   |   0   |   2   |   0   |   1   |   0   |   460
 #   S3   0  |   1   |   4   |   0   |   0   |   0   |   1   |   420
-def crear_tabla(variables,restricciones):
+def crear_tabla(variables,restricciones): # pide los datos de cada variable y armamos una tabla como la de arriba
     tabla = []
     filas = []
-    for i in range(1 + restricciones):
+    for i in range(1 + restricciones): 
         if i == 0:
             filas.append("Z")
             print('Datos Fila Z')
@@ -50,7 +50,7 @@ def crear_tabla(variables,restricciones):
 def imprimir_tabla(lista,filas):
     cadena = ""
     
-    for i in range(2 + variables + restricciones):
+    for i in range(2 + variables + restricciones): #imprimimos los headers de las columnas
         if i == 0:
             cadena +=  f"   Z      |"
         elif i>0 and i<= variables:
@@ -74,7 +74,7 @@ def encontrar_columna_pivote(lista,modo="max"):
     mayor = lista[0][1]
     menor = lista[0][1]
     columnaPivote = 1
-    if modo == 'max':
+    if modo == 'max': # buscamos en las variables el menor numero negativo
         for i in range(variables):
             if menor > lista[0][i+1]:
                 menor = lista[0][i+1]
@@ -82,7 +82,7 @@ def encontrar_columna_pivote(lista,modo="max"):
         if menor >= 0:
             return "Terminado"
         return columnaPivote
-    elif modo == 'min':
+    elif modo == 'min': #buscamos el mayor numero positivo
         for i in range(variables):
             if mayor < lista[0][i+1]:
                 mayor = lista[0][i+1]
@@ -92,7 +92,7 @@ def encontrar_columna_pivote(lista,modo="max"):
         return columnaPivote
 
 def encontrar_fila_pivote(columna_pivote,lista):
-    menor = 999999999999999
+    menor = 999999999999999 #declaramos menor y fila pivote para poder accederlos dentro del for
     filaPivote= 1
     for i in range(1,restricciones+1):
         if lista[i][columna_pivote]>0:
@@ -107,7 +107,7 @@ def nueva_tabla(columnaPivote,filaPivote,elementoPivote,lista,variablesEntrada):
     filaNueva = []
     variablesSalida = variablesEntrada.copy()
     for numero in lista[filaPivote]:
-        filaNueva.append(numero*(1/elementoPivote))
+        filaNueva.append(numero*(1/elementoPivote)) # la fila nueva de entrada
 
     lista2 = []
     for i,arreglo in enumerate(lista):
@@ -119,10 +119,10 @@ def nueva_tabla(columnaPivote,filaPivote,elementoPivote,lista,variablesEntrada):
             continue
         for j,numero in enumerate(arreglo):
             if operador ==0:
-                filaAux.append(lista[i][j]) 
+                filaAux.append(lista[i][j]) #si la variable ya es 0, entonces pasamos la fila tal cual esta
                 
             else:
-                valorNuevo = lista[i][j] + operador * filaNueva[j]
+                valorNuevo = lista[i][j] + operador * filaNueva[j] #Calculamos los nuevos valores de las filas
                 filaAux.append(valorNuevo)
         lista2.append(filaAux)
     return lista2, variablesSalida
@@ -139,7 +139,7 @@ def resolver(tabla,variables,i,modo = 'max'):
         elemento1 = tabla[fila1][columna1]
         tabla2,variablesEntrada2 = nueva_tabla(columna1,fila1,elemento1,tabla,variables)
         i += 1
-        resolver(tabla2,variablesEntrada2,i,modo)
+        resolver(tabla2,variablesEntrada2,i,modo) #Funcion recursiva para resolver la tabla por completo
 
 
 tabla1,variablesEntrada1 =crear_tabla(variables,restricciones)
