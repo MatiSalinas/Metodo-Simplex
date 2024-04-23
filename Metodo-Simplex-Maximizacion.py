@@ -70,16 +70,26 @@ def imprimir_tabla(lista,filas):
 
 lista = []
 
-def encontrar_columna_pivote(lista):
+def encontrar_columna_pivote(lista,modo="max"):
+    mayor = lista[0][1]
     menor = lista[0][1]
     columnaPivote = 1
-    for i in range(variables):
-        if menor > lista[0][i+1]:
-            menor = lista[0][i+1]
-            columnaPivote = i + 1
-    if menor > 0:
-        return "Terminado"
-    return columnaPivote
+    if modo == 'max':
+        for i in range(variables):
+            if menor > lista[0][i+1]:
+                menor = lista[0][i+1]
+                columnaPivote = i + 1
+        if menor >= 0:
+            return "Terminado"
+        return columnaPivote
+    elif modo == 'min':
+        for i in range(variables):
+            if mayor < lista[0][i+1]:
+                mayor = lista[0][i+1]
+                columnaPivote = i + 1    
+        if mayor == 0:
+            return "Terminado"
+        return columnaPivote
 
 def encontrar_fila_pivote(columna_pivote,lista):
     menor = 999999999999999
@@ -117,23 +127,21 @@ def nueva_tabla(columnaPivote,filaPivote,elementoPivote,lista,variablesEntrada):
         lista2.append(filaAux)
     return lista2, variablesSalida
 
+def resolver(tabla,variables,i,modo = 'max'):
+    print(f'Tabla {i}')
+    imprimir_tabla(tabla,variables)
+    columna1 = encontrar_columna_pivote(tabla,modo=modo)
+    if columna1 == 'Terminado' or i>5:
+        print('Solucion final')
+        return
+    else:
+        fila1 = encontrar_fila_pivote(columna1,tabla)
+        elemento1 = tabla[fila1][columna1]
+        tabla2,variablesEntrada2 = nueva_tabla(columna1,fila1,elemento1,tabla,variables)
+        i += 1
+        resolver(tabla2,variablesEntrada2,i,modo)
+
+
 tabla1,variablesEntrada1 =crear_tabla(variables,restricciones)
-print('Tabla1')
-imprimir_tabla(tabla1,variablesEntrada1)
-
-columna1 = encontrar_columna_pivote(tabla1)
-fila1 = encontrar_fila_pivote(columna1,tabla1)
-elemento1 = tabla1[fila1][columna1]
-tabla2,variablesEntrada2 = nueva_tabla(columna1,fila1,elemento1,tabla1,variablesEntrada1)
-
-print("Tabla 2")
-imprimir_tabla(tabla2,variablesEntrada2)
-columna2 = encontrar_columna_pivote(tabla2)
-fila2 = encontrar_fila_pivote(columna2,tabla2)
-elemento2 = tabla2[fila2][columna2]
-
-tabla3,variablesEntrada3 = nueva_tabla(columna2,fila2,elemento2,tabla2,variablesEntrada2)
-
-print("Tabla 3")
-imprimir_tabla(tabla3,variablesEntrada3)
+resolver(tabla1,variablesEntrada1,1,modo='min')
 
