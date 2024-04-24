@@ -75,20 +75,25 @@ def encontrar_columna_pivote(lista,modo="max"):
     menor = lista[0][1]
     columnaPivote = 1
     if modo == 'max': # buscamos en las variables el menor numero negativo
-        for i in range(variables):
+        for i in range(variables+restricciones):
             if menor > lista[0][i+1]:
                 menor = lista[0][i+1]
                 columnaPivote = i + 1
-        if menor >= 0:
+        if menor == 0:
             return "Terminado"
         return columnaPivote
     elif modo == 'min': #buscamos el mayor numero positivo
-        for i in range(variables):
+        for i in range(variables+restricciones):
             if mayor < lista[0][i+1]:
                 mayor = lista[0][i+1]
                 columnaPivote = i + 1    
-        if mayor == 0:
-            return "Terminado"
+        if mayor == 0: #una vez que volvemos los valores de X1,X2...Xn= 0, nos empezamos a fijar si alguna de las variables de holgura/excendente son negativas en la fila Z, procedemos a tomar el que tenga mayor valor absoluto como nuestra fila pivote
+            for i in range(variables+restricciones):
+                if abs(mayor) < abs(lista[0][i+1]):
+                    mayor = lista[0][i+1]
+                    columnaPivote = i + 1   
+            if mayor == 0:
+                return "Terminado"
         return columnaPivote
 
 def encontrar_fila_pivote(columna_pivote,lista):
@@ -144,4 +149,3 @@ def resolver(tabla,variables,i,modo = 'max'):
 
 tabla1,variablesEntrada1 =crear_tabla(variables,restricciones)
 resolver(tabla1,variablesEntrada1,1,modo='min')
-
